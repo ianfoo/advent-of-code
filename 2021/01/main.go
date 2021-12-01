@@ -39,19 +39,27 @@ func readInput(in io.Reader) ([]int, error) {
 }
 
 func run() error {
+	const windowSize = 3
 	var (
 		last         int
+		sum          int
 		numIncreases int
 	)
 	nums, err := readInput(os.Stdin)
 	if err != nil {
 		return err
 	}
-	for i, num := range nums {
-		if num > last && i > 0 {
+	for i := range nums {
+		if i > len(nums)-windowSize {
+			break
+		}
+		sum = nums[i] + nums[i+1] + nums[i+2]
+
+		// Do comparison only after we've filled the first window.
+		if i > 0 && sum > last {
 			numIncreases++
 		}
-		last = num
+		last = sum
 	}
 	fmt.Println(numIncreases)
 	return nil
